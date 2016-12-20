@@ -1,0 +1,12 @@
+5.5.0f3:2.3.0.0
+StandaloneWindows
+I:/Unity3D/Editor/Data/Managed/UnityEngine.dll
+I:/Unity3D/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll
+I:/Unity3D/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll
+I:/Unity3D/Editor/Data/UnityExtensions/Unity/PlaymodeTestsRunner/UnityEngine.PlaymodeTestsRunner.dll
+I:/Unity3D/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll
+I:/Unity3D/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll
+I:/Unity3D/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll
+I:/Unity3D/Editor/Data/Managed/UnityEditor.dll
+I:/Unity3D/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll
+I:/Unity3D/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Common.dll
