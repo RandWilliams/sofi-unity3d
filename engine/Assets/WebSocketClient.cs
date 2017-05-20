@@ -324,6 +324,7 @@ public class WebSocketClient : MonoBehaviour {
         if (cmd.color.Length > 0)
         {
             Renderer rend = obj.GetComponent<Renderer>();
+            rend.material.shader = Shader.Find("Standard");
             Color color = rend.material.color;
 
             color.r = cmd.color[0];
