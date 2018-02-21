@@ -23,9 +23,15 @@ public class SofiCommand
     public float[] color;
 
     public bool rigidbody;
+    public bool rigidbody_freeze_rotation;
     public bool collider;
 
     public string look_at;
+
+    public string animation;
+
+    public bool move;
+    public bool stop_moving;
 }
 
 public class WebSocketClient : MonoBehaviour {
@@ -33,6 +39,8 @@ public class WebSocketClient : MonoBehaviour {
     private bool connected = false;
 
     private List<string> commands = new List<string>();
+    private List<GameObject> moving_objects = new List<GameObject>();
+    private List<GameObject> fast_moving_objects = new List<GameObject>();
 
     private HashSet<string> listenToKeys = new HashSet<string>();
 
@@ -58,10 +66,21 @@ public class WebSocketClient : MonoBehaviour {
         };
 
         ConnectToSofi();
+
     }
 
 	void Update()
     {
+        foreach (GameObject obj in moving_objects)
+        {
+            obj.transform.Translate(Vector3.forward * Time.deltaTime);
+        }
+
+        foreach (GameObject obj in fast_moving_objects)
+        {
+            obj.transform.Translate(Vector3.forward * Time.deltaTime * 2);
+        }
+
         if (connected)
         {
             foreach (string key in listenToKeys)
@@ -108,7 +127,7 @@ public class WebSocketClient : MonoBehaviour {
     void ConnectToSofi()
     {
         ws.Connect();
-        ws.SendAsync("{\"event\": \"init\"}", null);
+        ws.SendAsync("{\"event\": \"init\", \"client_type\": \"unity3d\"}", null);
     }
 
     void HandleCommand(string data)
@@ -169,13 +188,20 @@ public class WebSocketClient : MonoBehaviour {
             {
                 obj = GameObject.CreatePrimitive(PrimitiveType.Plane);
             }
+            else if (cmd.obj == "barbarian")
+            {
+                obj = Instantiate(Resources.Load("barbarian", typeof(GameObject))) as GameObject;
+            }
+            else if (cmd.obj == "tree")
+            {
+                obj = Instantiate(Resources.Load("tree", typeof(GameObject))) as GameObject;
+            }
+            else if (cmd.obj == "well")
+            {
+                obj = Instantiate(Resources.Load("well", typeof(GameObject))) as GameObject;
+            }
             else {
                 return;
-            }
-
-            if (cmd.name != null)
-            {
-                obj.name = cmd.name;
             }
         }
         else if (cmd.command == "unity.update")
@@ -294,9 +320,15 @@ public class WebSocketClient : MonoBehaviour {
             return;
         }
 
+        if (cmd.name != null)
+        {
+            obj.name = cmd.name;
+        }
+
         if (cmd.rigidbody)
         {
-            obj.AddComponent<Rigidbody>();
+            Rigidbody rb = obj.AddComponent<Rigidbody>();
+            if (cmd.rigidbody_freeze_rotation) rb.freezeRotation = true;
         }
 
         if (cmd.position_on != null && cmd.position_on != "")
@@ -334,5 +366,23 @@ public class WebSocketClient : MonoBehaviour {
 
             rend.material.color = color;
         }
+
+        if (cmd.animation != null) {
+            obj.GetComponent<Animator>().Play(cmd.animation);
+        }
+
+        if (cmd.look_at != null) {
+            GameObject other = GameObject.Find(cmd.look_at);
+            obj.transform.LookAt(other.transform);
+        }
+
+        if (cmd.move) {
+            moving_objects.Add(obj);
+        }
+
+        if (cmd.stop_moving) {
+            moving_objects.Remove(obj);
+        }
     }
+
 }
